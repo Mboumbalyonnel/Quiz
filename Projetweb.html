@@ -1,0 +1,221 @@
+<!-- Début HTML -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz sur l'Afrique</title>
+  <style>
+    /* Début CSS */
+    body {
+      font-family: Arial, sans-serif;
+      background-image: url('https://static8.depositphotos.com/1008611/883/v/450/depositphotos_8833952-stock-illustration-africa-continent-flag-map.jpg');
+      background-size: 60%; 
+      background-position: center;
+      margin: 0;
+      padding: 0;
+      color: #2C3E50; 
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: rgba(255, 255, 255, 0.8); 
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #2C3E50; 
+    }
+
+    #quiz {
+      margin-bottom: 20px;
+    }
+
+    button {
+      display: block;
+      margin: 0 auto;
+      padding: 10px 20px;
+      background-color: #2980B9; 
+      color: #FFF;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #3498DB; 
+    }
+
+    #results {
+      text-align: center;
+      font-weight: bold;
+    }
+
+    #additional-content {
+      background-color: rgba(255, 255, 255, 0.8);
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+
+    #additional-content h2 {
+      color: #2C3E50;
+    }
+
+    #additional-content p {
+      color: #34495E;
+    }
+    /* Fin CSS */
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Quiz sur l'Afrique</h1>
+
+    <!-- Contenu supplémentaire -->
+    <div id="additional-content">
+      <h2>Instructions :</h2>
+      <p>Ce quiz porte sur l'Afrique et teste vos connaissances sur divers sujets liés au continent.</p>
+      <h2>Informations sur le sujet :</h2>
+      <p>L'Afrique est le deuxième continent le plus peuplé du monde, avec une diversité culturelle et géographique remarquable.</p>
+      <h2>Conseils :</h2>
+      <p>Prenez votre temps pour lire attentivement chaque question et choisir la meilleure réponse.</p>
+      <h2>Anecdotes :</h2>
+      <p>Saviez-vous que l'harissa, cette pâte de piment tunisienne, appréciée pour son goût relevé et ses vertus médicinales, a été classée au patrimoine immatériel mondial de l'UNESCO le 1er décembre 2022 ?</p>
+    </div>
+
+    <!-- Quiz -->
+    <div id="quiz"></div>
+    <button id="submit">Soumettre</button>
+    <div id="results"></div>
+  </div>
+    /* Début Javascript */
+
+  <script>
+    // Données du quiz en format JSON
+    // Début JSON
+    const quizData = [
+      {
+        "question": "Quel est le plus haut sommet d'Afrique ?",
+        "answers": [
+          { "label": "a", "text": "Mont Kenya" },
+          { "label": "b", "text": "Mont Kilimandjaro" },
+          { "label": "c", "text": "Mont Cameroun" }
+        ],
+        "correctAnswer": "b",
+        "explanation": "Le Mont Kilimandjaro est le plus haut sommet d'Afrique."
+      },
+      {
+        "question": "Quel est le plus grand désert chaud du monde, situé en Afrique du Nord ?",
+        "answers": [
+          { "label": "a", "text": "Le Sahara" },
+          { "label": "b", "text": "Le Kalahari" },
+          { "label": "c", "text": "Le Namib" }
+        ],
+        "correctAnswer": "a",
+        "explanation": "Le Sahara est le plus grand désert chaud du monde, situé en Afrique du Nord."
+      },
+      {
+        "question": "Quelle est la capitale du Gabon ?",
+        "answers": [
+          { "label": "a", "text": "Libreville" },
+          { "label": "b", "text": "Brazzaville" },
+          { "label": "c", "text": "Alexandrie" }
+        ],
+        "correctAnswer": "a",
+        "explanation": "Libreville est la capitale du Gabon."
+      },
+      {
+        "question": "Quelle est la capitale de la Tunisie ?",
+        "answers": [
+          { "label": "a", "text": "Alger" },
+          { "label": "b", "text": "Tunis" },
+          { "label": "c", "text": "Rabat" }
+        ],
+        "correctAnswer": "b",
+        "explanation": "Tunis est la capitale de la Tunisie."
+      },
+      {
+        "question": "Quelle est la langue la plus parlé en Afrique ?",
+        "answers": [
+          { "label": "a", "text": "Swahili" },
+          { "label": "b", "text": "Français" },
+          { "label": "c", "text": "Arabe" }
+        ],
+        "correctAnswer": "a",
+        "explanation": "Le swahili est la langue la plus parlé d'Afrique."
+      },
+      {
+        "question": "Quel fleuve est le plus long d'Afrique ?",
+        "answers": [
+          { "label": "a", "text": "Le Nil" },
+          { "label": "b", "text": "Le Congo" },
+          { "label": "c", "text": "Le Niger" }
+        ],
+        "correctAnswer": "a",
+        "explanation": "Le Nil est le fleuve le plus long d'Afrique."
+      }
+    ];
+    // Fin JSON
+
+    const quizContainer = document.getElementById("quiz");
+    const resultsContainer = document.getElementById("results");
+    const submitButton = document.getElementById("submit");
+
+    // Fonction pour construire le quiz
+    function buildQuiz() {
+      const output = [];
+
+      quizData.forEach((currentQuestion, questionNumber) => {
+        const answers = [];
+
+        currentQuestion.answers.forEach(answer => {
+          answers.push(
+            `<label>
+              <input type="radio" name="question${questionNumber}" value="${answer.label}">
+              ${answer.label} : ${answer.text}
+            </label>`
+          );
+        });
+
+        output.push(
+          `<div class="question"> ${currentQuestion.question} </div>
+          <div class="answers"> ${answers.join("<br>")} </div>`
+        );
+      });
+
+      quizContainer.innerHTML = output.join("");
+    }
+
+    function showResults() {
+      const answerContainers = quizContainer.querySelectorAll(".answers");
+
+      let numCorrect = 0;
+
+      quizData.forEach((currentQuestion, questionNumber) => {
+        const answerContainer = answerContainers[questionNumber];
+        const selector = `input[name=question${questionNumber}]:checked`;
+        const userAnswer = (answerContainer.querySelector(selector) || {}).value;
+
+        if (userAnswer === currentQuestion.correctAnswer) {
+          numCorrect++;
+          answerContainers[questionNumber].style.color = "lightgreen";
+        } else {
+          answerContainers[questionNumber].style.color = "red";
+        }
+      });
+
+      resultsContainer.innerHTML = `${numCorrect} réponses correctes sur ${quizData.length}`;
+    }
+
+    buildQuiz();
+
+    submitButton.addEventListener("click", showResults);
+  </script>
+  <!-- Fin JavaScript -->
+</body>
+</html>
